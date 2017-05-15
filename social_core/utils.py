@@ -56,7 +56,7 @@ def import_module(name):
 def module_member(name):
     mod, member = name.rsplit('.', 1)
     module = import_module(mod)
-    return getattr(module, member)
+    return getattr(module, member, None)
 
 
 def user_agent():
