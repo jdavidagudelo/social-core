@@ -22,13 +22,13 @@ class FacebookOAuth2(BaseOAuth2):
     name = 'facebook'
     RESPONSE_TYPE = None
     SCOPE_SEPARATOR = ','
-    AUTHORIZATION_URL = 'https://www.facebook.com/v{version}/dialog/oauth'
+    AUTHORIZATION_URL = 'https://www.facebook.com/dialog/oauth'
     ACCESS_TOKEN_URL = \
-        'https://graph.facebook.com/v{version}/oauth/access_token'
+        'https://graph.facebook.com/oauth/access_token'
     REVOKE_TOKEN_URL = \
         'https://graph.facebook.com/v{version}/{uid}/permissions'
     REVOKE_TOKEN_METHOD = 'DELETE'
-    USER_DATA_URL = 'https://graph.facebook.com/v{version}/me'
+    USER_DATA_URL = 'https://graph.facebook.com/me'
     EXTRA_DATA = [
         ('id', 'id'),
         ('expires', 'expires'),
@@ -42,12 +42,10 @@ class FacebookOAuth2(BaseOAuth2):
         return params
 
     def authorization_url(self):
-        version = self.setting('API_VERSION', API_VERSION)
-        return self.AUTHORIZATION_URL.format(version=version)
+        return self.AUTHORIZATION_URL
 
     def access_token_url(self):
-        version = self.setting('API_VERSION', API_VERSION)
-        return self.ACCESS_TOKEN_URL.format(version=version)
+        return self.ACCESS_TOKEN_URL
 
     def get_user_details(self, response):
         """Return user details from Facebook account"""
@@ -74,9 +72,7 @@ class FacebookOAuth2(BaseOAuth2):
                 msg=access_token.encode('utf8'),
                 digestmod=hashlib.sha256
             ).hexdigest()
-
-        version = self.setting('API_VERSION', API_VERSION)
-        return self.get_json(self.USER_DATA_URL.format(version=version),
+        return self.get_json(self.USER_DATA_URL,
                              params=params)
 
     def process_error(self, data):

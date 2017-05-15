@@ -104,7 +104,9 @@ class BaseAuth(object):
         for idx, name in enumerate(pipeline[pipeline_index:]):
             out['pipeline_index'] = pipeline_index + idx
             func = module_member(name)
-            result = func(*args, **out) or {}
+            result = {}
+            if func is not None:
+                result = func(*args, **out) or {}
             if not isinstance(result, dict):
                 return result
             out.update(result)
